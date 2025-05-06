@@ -60,6 +60,7 @@ A WebGL-based retro demoscene experience using Three.js with psychedelic shaders
      - `music3.mp3` - For Scene 3 (Julia fractal scene)
      - `music4.mp3` - For Scene 4 (Mandelbrot fractal scene)
      - `music5.mp3` - For Scene 5 (Newton-Raphson fractal scene)
+     - * all the music is free royalty music from https://pixabay.com/music/ *
 
 3. **Run the Project**:
    ```bash
