@@ -9,11 +9,11 @@ class BannerController {
       starwarsTextId: 'starwars-text',
       speed: 100, // pixels per second
       messages: [
-        "*** WELCOME TO THE ULTIMATE RETRO DEMOSCENE EXPERIENCE ***",
-        "*** GREETINGS TO ALL THE CODERS, ARTISTS AND MUSICIANS OUT THERE ***",
-        "*** THIS DEMO IS POWERED BY THREE.JS AND WEBGL ***",
-        "*** TURN UP THE VOLUME AND ENJOY THE RIDE ***",
-        "*** SPECIAL THANKS TO THE DEMOSCENE COMMUNITY FOR THE INSPIRATION ***"
+        "*** WHAT IS REALITY? ***",
+        "*** IS EVERYTHING A SIMULATION? ***",
+        "*** REALITY IS CREATED BY THE OBSERVER ***",
+        "*** KNOCK KNOCK ***",
+        "*** FOLLOW THE WHITE RABBIT ***"
       ],
       ...options
     };

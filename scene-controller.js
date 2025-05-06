@@ -43,7 +43,7 @@ class SceneController {
         // Default to CRT effect
         this.createScene('crt');
       }
-      console.log(`Demo started with ${effect} effect`);
+      console.log(`Fractal Madness started with ${effect} effect`);
     } catch (error) {
       console.error('Error initializing effect:', error);
       // Fallback to basic scene if there's an error
