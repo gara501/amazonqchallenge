@@ -1,0 +1,2 @@
+Place your image files in this directory for the texture-based shader effect.
+Recommended images: background.jpg, texture1.jpg, texture2.jpg

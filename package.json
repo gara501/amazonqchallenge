@@ -1,0 +1,19 @@
+{
+  "name": "webgl-retro-demoscene",
+  "version": "1.0.0",
+  "description": "A WebGL-based retro demoscene experience using Three.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "npx serve",
+    "dev": "npx serve"
+  },
+  "keywords": [
+    "webgl",
+    "threejs",
+    "demoscene",
+    "shaders",
+    "retro"
+  ],
+  "author": "",
+  "license": "MIT"
+}

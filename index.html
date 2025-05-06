@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DemoX - Retro Demoscene</title>
+  <!-- Favicon -->
+  <link rel="icon" href="assets/images/amazonq.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="assets/images/amazonq.ico" type="image/x-icon">
+  <style>
+    body { margin: 0; overflow: hidden; background: black; }
+    canvas { display: block; }
+    
+    /* Scrolling banner styles */
+    .banner-container {
+      position: fixed;
+      bottom: 30px;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      overflow: hidden;
+      z-index: 1000;
+      display: none; /* Hide by default, will be shown for non-scene-1 */
+    }
+    
+    .banner-text {
+      position: absolute;
+      bottom: 0;
+      white-space: nowrap;
+      color: #00ffff;
+      font-family: "VT323", "Courier New", monospace;
+      font-size: 28px;
+      text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+      transform: translateX(100%);
+    }
+    
+    /* Optional: Add a gradient overlay to fade the edges */
+    .banner-container::before,
+    .banner-container::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 50px;
+      height: 100%;
+      z-index: 2;
+    }
+    
+    .banner-container::before {
+      left: 0;
+      background: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0));
+    }
+    
+    .banner-container::after {
+      right: 0;
+      background: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
+    }
+    
+    /* Star Wars style intro container */
+    .starwars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      perspective: 400px;
+      overflow: hidden;
+      z-index: 1000;
+      display: none; /* Will be shown only for scene-1 */
+    }
+    
+    .starwars-text {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      color: #ffd700; /* Changed from #ffff00 to #ffd700 (gold) for better contrast */
+      font-family: "VT323", "Courier New", monospace;
+      font-size: 36px;
+      text-align: center;
+      transform-origin: 50% 100%;
+      transform: translateY(0) rotateX(25deg);
+      animation: starwars-scroll 60s linear infinite;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5); /* Added text shadow for better readability */
+    }
+    
+    .starwars-text h1 {
+      font-size: 48px;
+      margin: 0 0 40px;
+      text-transform: uppercase;
+      color: #ffd700; /* Gold */
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.5), 0 0 25px rgba(0, 0, 0, 0.8); /* Enhanced glow */
+    }
+    
+    .starwars-text p {
+      margin: 20px 0;
+      line-height: 1.5;
+    }
+    
+    /* Special emphasis for key phrases */
+    .starwars-text p.emphasis {
+      color: #ffffff; /* White for emphasis */
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(0, 0, 0, 0.8);
+    }
+    
+    @keyframes starwars-scroll {
+      0% {
+        top: 100%;
+      }
+      100% {
+        top: -300%;
+      }
+    }
+    
+    /* Fractal formula overlay */
+    .formula-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+    }
+    
+    .formula-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      padding: 15px 25px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+    
+    .formula-title {
+      font-family: "VT323", "Courier New", monospace;
+      font-size: 24px;
+      color: #ffffff;
+      margin: 0 0 10px 0;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    
+    .formula-text {
+      font-family: "VT323", "Courier New", monospace;
+      font-size: 20px;
+      color: #ffffff;
+      margin: 0;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    
+    .formula-container.scene-2 .formula-box {
+      border-color: rgba(255, 204, 0, 0.5);
+    }
+    
+    .formula-container.scene-2 .formula-title {
+      color: #ffcc00;
+    }
+    
+    .formula-container.scene-3 .formula-box {
+      border-color: rgba(255, 0, 255, 0.5);
+    }
+    
+    .formula-container.scene-3 .formula-title {
+      color: #ff00ff;
+    }
+    
+    .formula-container.scene-4 .formula-box {
+      border-color: rgba(0, 255, 136, 0.5);
+    }
+    
+    .formula-container.scene-4 .formula-title {
+      color: #00ff88;
+    }
+    
+    .formula-container.scene-5 .formula-box {
+      border-color: rgba(255, 136, 0, 0.5);
+    }
+    
+    .formula-container.scene-5 .formula-title {
+      color: #ff8800;
+    }
+    
+    /* Loading screen */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      transition: opacity 1s ease-in-out;
+    }
+    
+    #loading-text {
+      color: #00ffff;
+      font-family: "VT323", "Courier New", monospace;
+      font-size: 32px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+    }
+    
+    #loading-bar-container {
+      width: 300px;
+      height: 20px;
+      border: 2px solid #00ffff;
+      box-shadow: 0 0 10px #00ffff;
+      overflow: hidden;
+    }
+    
+    #loading-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #00ffff;
+      transition: width 0.3s ease-out;
+    }
+    
+    #start-button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: transparent;
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      font-family: "VT323", "Courier New", monospace;
+      font-size: 24px;
+      cursor: pointer;
+      text-shadow: 0 0 5px #00ffff;
+      box-shadow: 0 0 10px #00ffff;
+      display: none;
+      transition: all 0.3s ease;
+    }
+    
+    #start-button:hover {
+      background-color: rgba(0, 255, 255, 0.2);
+    }
+    
+    /* Control buttons styles */
+    .control-button {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      background-color: transparent;
+      border: 2px solid #00ffff;
+      border-radius: 50%;
+      color: #00ffff;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1500;
+      text-shadow: 0 0 5px #00ffff;
+      box-shadow: 0 0 10px #00ffff;
+      transition: all 0.3s ease;
+      opacity: 0.7;
+    }
+    
+    .control-button:hover {
+      opacity: 1;
+      background-color: rgba(0, 255, 255, 0.2);
+    }
+    
+    #mute-button {
+      top: 20px;
+      right: 20px;
+    }
+    
+    #mute-button.muted {
+      color: #ff0088;
+      border-color: #ff0088;
+      text-shadow: 0 0 5px #ff0088;
+      box-shadow: 0 0 10px #ff0088;
+    }
+    
+    #mute-button.muted:hover {
+      background-color: rgba(255, 0, 136, 0.2);
+    }
+    
+    #scene-button {
+      top: 20px;
+      right: 80px;
+      font-size: 16px;
+    }
+    
+    #scene-button.scene-1 {
+      color: #00ffff;
+      border-color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+      box-shadow: 0 0 10px #00ffff;
+    }
+    
+    #scene-button.scene-2 {
+      color: #ffcc00;
+      border-color: #ffcc00;
+      text-shadow: 0 0 5px #ffcc00;
+      box-shadow: 0 0 10px #ffcc00;
+    }
+    
+    #scene-button.scene-3 {
+      color: #ff00ff;
+      border-color: #ff00ff;
+      text-shadow: 0 0 5px #ff00ff;
+      box-shadow: 0 0 10px #ff00ff;
+    }
+    
+    #scene-button.scene-4 {
+      color: #00ff88;
+      border-color: #00ff88;
+      text-shadow: 0 0 5px #00ff88;
+      box-shadow: 0 0 10px #00ff88;
+    }
+    
+    #scene-button.scene-5 {
+      color: #ff8800;
+      border-color: #ff8800;
+      text-shadow: 0 0 5px #ff8800;
+      box-shadow: 0 0 10px #ff8800;
+    }
+    
+    #scene-button.scene-2:hover {
+      background-color: rgba(255, 204, 0, 0.2);
+    }
+    
+    #scene-button.scene-3:hover {
+      background-color: rgba(255, 0, 255, 0.2);
+    }
+    
+    #scene-button.scene-4:hover {
+      background-color: rgba(0, 255, 136, 0.2);
+    }
+    
+    #scene-button.scene-5:hover {
+      background-color: rgba(255, 136, 0, 0.2);
+    }
+    
+    /* Scene transition overlay */
+    #scene-transition {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      z-index: 1800;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .formula-container.scene-6 .formula-box {
+      border-color: rgba(0, 191, 255, 0.5);
+    }
+
+    .formula-container.scene-6 .formula-title {
+      color: #00bfff;
+    }
+
+    #scene-button.scene-6 {
+      color: #00bfff;
+      border-color: #00bfff;
+      text-shadow: 0 0 5px #00bfff;
+      box-shadow: 0 0 10px #00bfff;
+    }
+
+    #scene-button.scene-6:hover {
+      background-color: rgba(0, 191, 255, 0.2);
+    }
+  </style>
+  <!-- Google Fonts for retro font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <!-- MathJax for formula rendering -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <!-- Loading screen -->
+  <div id="loading-screen">
+    <div id="loading-text">LOADING EXPERIENCE...</div>
+    <div id="loading-bar-container">
+      <div id="loading-bar"></div>
+    </div>
+    <button id="start-button">START EXPERIENCE</button>
+  </div>
+
+  <!-- Scene transition overlay -->
+  <div id="scene-transition"></div>
+
+  <!-- Control buttons -->
+  <button id="mute-button" class="control-button" title="Mute/Unmute Sound">♪</button>
+  <button id="scene-button" class="control-button scene-1" title="Switch Scene">1</button>
+
+  <!-- Star Wars style intro for Scene 1 -->
+  <div id="starwars-container" class="starwars-container">
+    <div id="starwars-text" class="starwars-text">
+      <h1>WebGL Retro Demoscene</h1>
+      <p>Episode I: The Digital Frontier</p>
+      <br><br>
+      <p>It is a period of digital revolution. Rebel coders, striking from hidden terminals, have won their first victory against the corporate empire.</p>
+      <br>
+      <p>During the battle, rebel hackers managed to create the ultimate demo scene, a nostalgic tribute with enough power to immerse an entire generation in digital art.</p>
+      <br>
+      <p>Pursued by the agents of mainstream conformity, the demoscene races across the internet, custodian of the creative code that can save digital art and restore freedom to the computing galaxy...</p>
+      <br><br><br>
+      <p class="emphasis">WELCOME TO THE ULTIMATE RETRO DEMOSCENE EXPERIENCE</p>
+      <br>
+      <p class="emphasis">GREETINGS TO ALL THE CODERS, ARTISTS AND MUSICIANS OUT THERE</p>
+      <br>
+      <p class="emphasis">THIS DEMO IS POWERED BY THREE.JS AND WEBGL</p>
+      <br>
+      <p class="emphasis">TURN UP THE VOLUME AND ENJOY THE RIDE</p>
+      <br>
+      <p class="emphasis">SPECIAL THANKS TO THE DEMOSCENE COMMUNITY FOR THE INSPIRATION</p>
+    </div>
+  </div>
+
+  <!-- Fractal formula overlays -->
+  <!-- Sierpinski Triangle Formula (Scene 2) -->
+  <div id="formula-sierpinski" class="formula-container scene-2" style="display: none;">
+    <div class="formula-box">
+      <div class="formula-title">Sierpinski Triangle</div>
+      <div class="formula-text">
+        <div>
+          \(f(z) = \begin{cases}
+          z/2, & \text{if } |z| < 1 \\
+          (1-z)/2, & \text{otherwise}
+          \end{cases}\)
+        </div>
+        <div style="margin-top: 10px;">
+          Scale: <span id="sierpinski-scale">2.0</span> | Variation: <span id="sierpinski-variation">1.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Julia Set Formula (Scene 3) -->
+  <div id="formula-julia" class="formula-container scene-3" style="display: none;">
+    <div class="formula-box">
+      <div class="formula-title">Julia Set</div>
+      <div class="formula-text">
+        <div>
+          \(f_c(z) = z^2 + c\)
+        </div>
+        <div>
+          \(c = \) <span id="julia-c">-0.7 + 0.27i</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mandelbrot Set Formula (Scene 4) -->
+  <div id="formula-mandelbrot" class="formula-container scene-4" style="display: none;">
+    <div class="formula-box">
+      <div class="formula-title">Mandelbrot Set</div>
+      <div class="formula-text">
+        <div>
+          \(f_c(z) = z^2 + c\)
+        </div>
+        <div>
+          \(z_0 = 0, z_{n+1} = z_n^2 + c\)
+        </div>
+        <div>
+          Offset: <span id="mandelbrot-offset">(0.0, 0.0)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Newton-Raphson Formula (Scene 5) -->
+  <div id="formula-newton" class="formula-container scene-5" style="display: none;">
+    <div class="formula-box">
+      <div class="formula-title">Newton-Raphson Fractal</div>
+      <div class="formula-text">
+        <div>
+          \(z_{n+1} = z_n - \frac{p(z_n)}{p'(z_n)}\)
+        </div>
+        <div>
+          \(p(z) = z^n - 1\)
+        </div>
+        <div>
+          Degree: <span id="newton-degree">3</span> | Relaxation: <span id="newton-relaxation">1.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menger Sponge Formula (Scene 6) -->
+  <div id="formula-menger" class="formula-container scene-6" style="display: none;">
+    <div class="formula-box">
+      <div class="formula-title">Menger Sponge Fractal</div>
+      <div class="formula-text">
+        <div>
+          \(d(p) = \lim_{n \to \infty} s^{-n} \cdot |p_n|\)
+        </div>
+        <div style="margin-top: 10px;">
+          Scale: <span id="menger-scale">3.0</span> | Variation: <span id="menger-variation">1.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner container for other scenes -->
+  <div id="banner-container" class="banner-container">
+    <div id="banner-text" class="banner-text">
+      *** WELCOME TO THE ULTIMATE RETRO DEMOSCENE EXPERIENCE *** GREETINGS TO ALL THE CODERS, ARTISTS AND MUSICIANS OUT THERE *** THIS DEMO IS POWERED BY THREE.JS AND WEBGL *** TURN UP THE VOLUME AND ENJOY THE RIDE *** SPECIAL THANKS TO THE DEMOSCENE COMMUNITY FOR THE INSPIRATION ***
+    </div>
+  </div>
+  
+  <!-- Scripts -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="app.js"></script>
+  <script type="module" src="banner.js"></script>
+  <script type="module" src="formula-controller.js"></script>
+</body>
+</html>
