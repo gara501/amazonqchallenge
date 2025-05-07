@@ -282,3 +282,38 @@ Due to browser autoplay policies, you may need to interact with the page (click 
 - All music is royalty-free from https://pixabay.com/music/
 - Created with assistance from Amazon Q
 - Fractal mathematics based on classic algorithms and modern shader techniques
+
+## PROMPTS IN AMAZON Q
+You are an expert in Shaders, webGL and ThreeJS.
+Create a minimal HTML file for a WebGL-based demo using Three.js. The canvas must fill the entire browser window with no scrollbars and load a JavaScript module named main.js.
+In main.js, do the following:
+### Scene 1: Psychedelic Intro
+- Create a full-screen plane using a custom ShaderMaterial.
+- Pass u_time and u_resolution as uniforms to both vertex and fragment shaders.
+- Animate the scene using requestAnimationFrame.
+- Write a basic vertex shader that directly passes the vertex position to gl_Position.
+- Write a fragment shader that displays a colorful, animated, psychedelic effect using sine and cosine waves. Colors should change over time to evoke a retro 90s visual style.
+- Overlay a CRT-style distortion effect: simulate scanlines, screen curvature, and RGB channel offsets to mimic an old monitor.
+- Add a scrolling text banner like the Star Wars intro (from bottom to top), using either HTML/CSS or a Three.js text mesh.
+- Load and autoplay a looping background track (assets/music1.mp3). Handle browser autoplay restrictions and add a button to mute/unmute the music.
+
+### Scenes 2 to 6: Interactive Fractal Visuals
+For each of the following five full-screen WebGL scenes, use a new fragment shader and its own background music:
+- Scene 2: Julia Set — load music2.mp3
+- Scene 3: Sierpinski Triangle — load music3.mp3
+- Scene 4: Mandelbrot Set — load music4.mp3
+- Scene 5: Newton-Raphson Set — load music5.mp3
+- Scene 6: Menger Sponge — load music6.mp3
+
+For all fractal scenes:
+- Use ShaderMaterial with full-screen fragment shaders.
+- Use u_time, u_resolution, and u_mouse as uniforms.
+- Update fractal constants dynamically based on mouse movement.
+- Each scene should render and update in real time.
+
+### Navigation
+- Create a menu on the main page to switch between all the scenes.
+- When a scene loads, the corresponding music file should also load and autoplay.
+- For each scene containing a fractal, implement real-time dynamic interaction based on mouse movement. The mouse position should modify the constants used in the fractal’s equation. Each shader must include u_time and u_resolution uniforms, and the fractal should be rendered in real time. Create a navigation button on the main page that links to each individual fractal scene. Additionally, load and play the corresponding .mp3 audio file for each scene when it loads.
+- In all scenes that display fractals, add a fixed text element centered on the screen. This text should show the mathematical formula of the corresponding fractal. Ensure the text has a legible color with sufficient contrast against the background. Additionally, implement a subtle flowing animation (e.g., shimmer or gentle wave) triggered when the user hovers the mouse over the text.
+-  Add this text in the center of the screen in the scene 9: "In the sacred dance of the universe, fractals mirror the infinite within the finite, each pattern echoing the breath of creation. Quantum physics whispers that reality is not solid, but woven from probabilities—just as fractals emerge from simple laws into endless complexity. In this harmony, spirit and science converge, revealing that the cosmos may be a divine self-reflecting dream." This quote won't overlap the formula text,
