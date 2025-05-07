@@ -24,7 +24,7 @@ class LateralMenu {
     // Create menu container
     this.menuContainer = document.createElement('div');
     this.menuContainer.id = 'lateral-menu';
-    this.menuContainer.className = 'lateral-menu';
+    this.menuContainer.className = 'lateral-menu visible'; // Added 'visible' class to keep menu open by default
     
     // Add to DOM
     document.body.appendChild(this.menuContainer);
@@ -220,6 +220,9 @@ class LateralMenu {
       this.toggleButton.innerHTML = this.menuContainer.classList.contains('visible') ? '×' : '≡';
     });
     
+    // Set initial toggle button state to match menu visibility
+    this.toggleButton.innerHTML = '×';
+    
     // Create transition overlay
     this.transitionOverlay = document.createElement('div');
     this.transitionOverlay.className = 'scene-transition-overlay';
@@ -319,6 +322,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Wait a short time to ensure DOM is fully loaded
   setTimeout(() => {
     window.lateralMenu = new LateralMenu();
+    
+    // Make sure the menu is visible after initialization
+    const menu = document.getElementById('lateral-menu');
+    if (menu) {
+      menu.classList.add('visible');
+    }
   }, 1000);
 });
 
