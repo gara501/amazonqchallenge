@@ -8,6 +8,9 @@ import { MandelbrotScene } from './mandelbrot_scene.js';
 import { NewtonScene } from './newton_scene.js';
 import { getAudioController } from './audio-controller.js';
 import { MengerScene } from './menger_scene.js';
+import { KochScene } from './koch_scene.js';
+import { BloodScene } from './blood_scene.js';
+import { AtomsScene } from './atoms_scene.js';
 
 class SceneController {
   constructor() {
@@ -15,17 +18,10 @@ class SceneController {
     this.currentSceneType = null;
     this.currentSceneNumber = 1;
     this.transitionElement = document.getElementById('scene-transition');
-    this.sceneButton = document.getElementById('scene-button');
     
     // Get text animation elements
     this.bannerContainer = document.getElementById('banner-container');
     this.starwarsContainer = document.getElementById('starwars-container');
-    
-    // Set up scene button
-    if (this.sceneButton) {
-      this.sceneButton.addEventListener('click', () => this.nextScene());
-      this.sceneButton.style.display = 'none'; // Hide initially
-    }
   }
   
   // Initialize the scene based on URL parameter
@@ -55,11 +51,6 @@ class SceneController {
       }
     }
     
-    // Show scene button after initialization
-    if (this.sceneButton) {
-      this.sceneButton.style.display = 'flex';
-    }
-    
     // Update text animation based on scene
     this.updateTextAnimation();
   }
@@ -69,6 +60,15 @@ class SceneController {
     // Clean up previous scene if it exists
     if (this.currentScene) {
       this.cleanupCurrentScene();
+    }
+    
+    // Add a class to the body to trigger enter animation
+    document.body.classList.add('scene-enter');
+    
+    // Remove any existing philosophical quote to ensure it only appears in scene 9
+    const existingQuote = document.getElementById('philosophical-quote');
+    if (existingQuote) {
+      existingQuote.remove();
     }
     
     // Create the new scene
@@ -105,6 +105,18 @@ class SceneController {
         this.currentScene = new MengerScene();
         this.currentSceneNumber = 6;
         break;
+      case 'koch':
+        this.currentScene = new KochScene();
+        this.currentSceneNumber = 7;
+        break;
+      case 'blood':
+        this.currentScene = new BloodScene();
+        this.currentSceneNumber = 8;
+        break;
+      case 'atoms':
+        this.currentScene = new AtomsScene();
+        this.currentSceneNumber = 9;
+        break;
       default:
         this.currentScene = new CRTPsychedelicEffect();
         this.currentSceneNumber = 1;
@@ -124,6 +136,14 @@ class SceneController {
     // Make the scene globally accessible
     window.demoEffect = this.currentScene;
     
+    // Update scene button appearance (which now also handles the philosophical quote visibility)
+    this.updateSceneButtonAppearance();
+    
+    // Remove the enter animation class after animation completes
+    setTimeout(() => {
+      document.body.classList.remove('scene-enter');
+    }, 1000);
+    
     return this.currentScene;
   }
   
@@ -140,7 +160,7 @@ class SceneController {
     }
   }
   
-  // Cycle to the next scene
+  // Cycle to the next scene (kept for compatibility but no longer used directly)
   nextScene() {
     // Start transition animation
     this.startTransition(() => {
@@ -161,6 +181,15 @@ class SceneController {
           this.createScene('menger');
           break;
         case 6:
+          this.createScene('koch');
+          break;
+        case 7:
+          this.createScene('blood');
+          break;
+        case 8:
+          this.createScene('atoms');
+          break;
+        case 9:
           // Go back to original scene type
           const urlParams = new URLSearchParams(window.location.search);
           const originalEffect = urlParams.get('effect') || 'crt';
@@ -178,6 +207,9 @@ class SceneController {
     this.transitionElement.style.opacity = '1';
     this.transitionElement.style.pointerEvents = 'auto';
     
+    // Add a custom animation class
+    this.transitionElement.classList.add('transition-active');
+    
     // Execute callback after fade in
     setTimeout(() => {
       if (callback) callback();
@@ -186,7 +218,8 @@ class SceneController {
       setTimeout(() => {
         this.transitionElement.style.opacity = '0';
         this.transitionElement.style.pointerEvents = 'none';
-      }, 100);
+        this.transitionElement.classList.remove('transition-active');
+      }, 300);
     }, 500);
   }
   
@@ -227,43 +260,30 @@ class SceneController {
       this.currentScene.removeEventListeners();
     }
     
+    // Remove philosophical quote if it exists
+    const philosophicalQuote = document.getElementById('philosophical-quote');
+    if (philosophicalQuote) {
+      philosophicalQuote.remove();
+    }
+    
     // Set to null to help garbage collection
     this.currentScene = null;
   }
   
-  // Update the scene button appearance
+  // Update scene information (removed button appearance)
   updateSceneButtonAppearance() {
-    if (!this.sceneButton) return;
+    // This method is kept for compatibility but no longer updates any button
+    // It might be used by other parts of the code
     
-    // Update button appearance based on current scene number
-    this.sceneButton.classList.remove('scene-1', 'scene-2', 'scene-3', 'scene-4', 'scene-5');
-    this.sceneButton.classList.add(`scene-${this.currentSceneNumber}`);
-    
-    switch (this.currentSceneNumber) {
-      case 1:
-        this.sceneButton.title = 'Switch to Sierpinski Triangle Scene';
-        this.sceneButton.innerHTML = '1';
-        break;
-      case 2:
-        this.sceneButton.title = 'Switch to Julia Fractal Scene';
-        this.sceneButton.innerHTML = '2';
-        break;
-      case 3:
-        this.sceneButton.title = 'Switch to Mandelbrot Fractal Scene';
-        this.sceneButton.innerHTML = '3';
-        break;
-      case 4:
-        this.sceneButton.title = 'Switch to Newton Fractal Scene';
-        this.sceneButton.innerHTML = '4';
-        break;
-      case 5:
-        this.sceneButton.title = 'Switch to Menger Sponge Scene';
-        this.sceneButton.innerHTML = '5';
-        break;
-      case 6:
-        this.sceneButton.title = 'Switch to Original Scene';
-        this.sceneButton.innerHTML = '6';
-        break;
+    // Check if we need to show or hide the philosophical quote
+    const philosophicalQuote = document.getElementById('philosophical-quote');
+    if (philosophicalQuote) {
+      // Only show the quote in scene 9
+      if (this.currentSceneNumber === 9) {
+        philosophicalQuote.style.display = 'block';
+      } else {
+        philosophicalQuote.style.display = 'none';
+      }
     }
   }
 }

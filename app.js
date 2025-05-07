@@ -5,7 +5,7 @@ import { getSceneController } from './scene-controller.js';
 // Asset loader
 class AssetLoader {
   constructor() {
-    this.totalAssets = 13; // Shaders, music, textures, etc.
+    this.totalAssets = 22; // Shaders, music, textures, etc.
     this.loadedAssets = 0;
     this.loadingBar = document.getElementById('loading-bar');
     this.loadingScreen = document.getElementById('loading-screen');
@@ -45,12 +45,21 @@ class AssetLoader {
       this.loadShader('newton_vertex.glsl'),
       this.loadShader('menger_fragment.glsl'),
       this.loadShader('menger_vertex.glsl'),
+      this.loadShader('koch_fragment.glsl'),
+      this.loadShader('koch_vertex.glsl'),
+      this.loadShader('blood_fragment.glsl'),
+      this.loadShader('blood_vertex.glsl'),
+      this.loadShader('atoms_fragment.glsl'),
+      this.loadShader('atoms_vertex.glsl'),
       this.preloadAudio('assets/music.mp3'),
       this.preloadAudio('assets/music2.mp3'),
       this.preloadAudio('assets/music3.mp3'),
       this.preloadAudio('assets/music4.mp3'),
       this.preloadAudio('assets/music5.mp3'),
-      this.preloadAudio('assets/music6.mp3')
+      this.preloadAudio('assets/music6.mp3'),
+      this.preloadAudio('assets/music7.mp3'),
+      this.preloadAudio('assets/music8.mp3'),
+      this.preloadAudio('assets/music9.mp3')
     ];
     
     // Update progress for each loaded asset
@@ -157,4 +166,24 @@ class AssetLoader {
 // Initialize the loader when the page loads
 document.addEventListener('DOMContentLoaded', () => {
   new AssetLoader();
+  
+  // Add CSS for enhanced transitions
+  const style = document.createElement('style');
+  style.textContent = `
+    .scene-enter {
+      animation: scene-enter 1s ease-out;
+    }
+    
+    @keyframes scene-enter {
+      0% {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  `;
+  document.head.appendChild(style);
 });

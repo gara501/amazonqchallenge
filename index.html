@@ -281,62 +281,7 @@
       background-color: rgba(255, 0, 136, 0.2);
     }
     
-    #scene-button {
-      top: 20px;
-      right: 80px;
-      font-size: 16px;
-    }
-    
-    #scene-button.scene-1 {
-      color: #00ffff;
-      border-color: #00ffff;
-      text-shadow: 0 0 5px #00ffff;
-      box-shadow: 0 0 10px #00ffff;
-    }
-    
-    #scene-button.scene-2 {
-      color: #ffcc00;
-      border-color: #ffcc00;
-      text-shadow: 0 0 5px #ffcc00;
-      box-shadow: 0 0 10px #ffcc00;
-    }
-    
-    #scene-button.scene-3 {
-      color: #ff00ff;
-      border-color: #ff00ff;
-      text-shadow: 0 0 5px #ff00ff;
-      box-shadow: 0 0 10px #ff00ff;
-    }
-    
-    #scene-button.scene-4 {
-      color: #00ff88;
-      border-color: #00ff88;
-      text-shadow: 0 0 5px #00ff88;
-      box-shadow: 0 0 10px #00ff88;
-    }
-    
-    #scene-button.scene-5 {
-      color: #ff8800;
-      border-color: #ff8800;
-      text-shadow: 0 0 5px #ff8800;
-      box-shadow: 0 0 10px #ff8800;
-    }
-    
-    #scene-button.scene-2:hover {
-      background-color: rgba(255, 204, 0, 0.2);
-    }
-    
-    #scene-button.scene-3:hover {
-      background-color: rgba(255, 0, 255, 0.2);
-    }
-    
-    #scene-button.scene-4:hover {
-      background-color: rgba(0, 255, 136, 0.2);
-    }
-    
-    #scene-button.scene-5:hover {
-      background-color: rgba(255, 136, 0, 0.2);
-    }
+        /* Scene button styles removed as they're no longer needed */
     
     /* Scene transition overlay */
     #scene-transition {
@@ -351,6 +296,22 @@
       pointer-events: none;
       transition: opacity 0.5s ease;
     }
+    
+    #scene-transition.transition-active {
+      animation: scene-transition-effect 0.8s ease-in-out;
+    }
+    
+    @keyframes scene-transition-effect {
+      0% {
+        clip-path: circle(0% at center);
+      }
+      50% {
+        clip-path: circle(100% at center);
+      }
+      100% {
+        clip-path: circle(100% at center);
+      }
+    }
 
     .formula-container.scene-6 .formula-box {
       border-color: rgba(0, 191, 255, 0.5);
@@ -360,15 +321,74 @@
       color: #00bfff;
     }
 
-    #scene-button.scene-6 {
-      color: #00bfff;
-      border-color: #00bfff;
-      text-shadow: 0 0 5px #00bfff;
-      box-shadow: 0 0 10px #00bfff;
+    /* Scene 6 button styles removed */
+    
+    .formula-container.scene-7 .formula-box {
+      border-color: rgba(0, 255, 170, 0.5);
     }
 
-    #scene-button.scene-6:hover {
-      background-color: rgba(0, 191, 255, 0.2);
+    .formula-container.scene-7 .formula-title {
+      color: #00ffaa;
+    }
+
+    /* Scene 7 button styles removed */
+    
+    /* Scene 8 (Blood Vessels) styles */
+    .formula-container.scene-8 .formula-box {
+      border-color: rgba(255, 0, 0, 0.5);
+    }
+
+    .formula-container.scene-8 .formula-title {
+      color: #ff3333;
+    }
+
+    .lateral-menu-button.scene-8 {
+      color: #ff3333;
+      border-color: #ff3333;
+      text-shadow: 0 0 5px #ff3333;
+      box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+    }
+
+    .lateral-menu-button.scene-8:hover {
+      background-color: rgba(255, 51, 51, 0.2);
+    }
+    
+    /* Scene 9 (Atoms) styles */
+    .formula-container.scene-9 .formula-box {
+      border-color: rgba(0, 255, 255, 0.5);
+    }
+
+    .formula-container.scene-9 .formula-title {
+      color: #00ffff;
+    }
+
+    .lateral-menu-button.scene-9 {
+      color: #00ffff;
+      border-color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .lateral-menu-button.scene-9:hover {
+      background-color: rgba(0, 255, 255, 0.2);
+    }
+    
+    /* Philosophical quote styles */
+    #philosophical-quote {
+      opacity: 0.9;
+      transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      z-index: 1002 !important; /* Ensure quote is above formula */
+      display: none; /* Hidden by default, only shown in scene 9 */
+    }
+    
+    #philosophical-quote:hover {
+      opacity: 1;
+    }
+    
+    /* Ensure formula container and philosophical quote don't overlap */
+    .formula-container.scene-9 {
+      top: 75% !important; /* Move formula container lower for scene 9 */
+      position: absolute !important;
     }
   </style>
   <!-- Google Fonts for retro font -->
@@ -394,7 +414,6 @@
 
   <!-- Control buttons -->
   <button id="mute-button" class="control-button" title="Mute/Unmute Sound">♪</button>
-  <button id="scene-button" class="control-button scene-1" title="Switch Scene">1</button>
 
   <!-- Star Wars style intro for Scene 1 -->
   <div id="starwars-container" class="starwars-container">
@@ -408,7 +427,7 @@
       <br>
       <p>Discover the beauty of the fractals, each slide will go deep in the voices of the universe.</p>
       <br><br><br>
-      <p class="emphasis">WELCOME TO FRACTALS MADNESS</p>
+      <p class="emphasis">WELCOME TO FRACTAL MADNESS</p>
       <br>
       <p class="emphasis">THIS DEMO IS POWERED BY THREE.JS, WEBGL AND AMAZON Q.</p>
       <br>
@@ -503,6 +522,54 @@
     </div>
   </div>
 
+  <!-- Koch Curve Formula (Scene 7) -->
+  <div id="formula-koch" class="formula-container scene-7" style="display: none;">
+    <div class="formula-box">
+      <div class="formula-title">Koch Curve Fractal</div>
+      <div class="formula-text">
+        <div>
+          \(K_{n+1} = \{K_n \setminus (middle \; third) \} \cup \{equilateral \; triangle\}\)
+        </div>
+        <div style="margin-top: 10px;">
+          Scale: <span id="koch-scale">1.0</span> | Iterations: <span id="koch-iterations">4</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blood Vessels Formula (Scene 8) -->
+  <div id="formula-blood" class="formula-container scene-8" style="display: none;">
+    <div class="formula-box">
+      <div class="formula-title">Blood Vessels Fractal</div>
+      <div class="formula-text">
+        <div>
+          \(f(p) = fbm(p + 4.0 \cdot r(p))\)
+        </div>
+        <div>
+          \(r(p) = (fbm(p + q), fbm(p + q'))\)
+        </div>
+        <div style="margin-top: 10px;">
+          Scale: <span id="blood-scale">3.0</span> | Detail: <span id="blood-detail">4</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Atoms Formula (Scene 9) -->
+  <div id="formula-atoms" class="formula-container scene-9" style="display: none;">
+    <div class="formula-box">
+      <div class="formula-title">Quantum Atoms Simulation</div>
+      <div class="formula-text">
+        <div>
+          \(r(t) = r_0 + v \cdot t + \frac{1}{2} a \cdot t^2\)
+        </div>
+        <div style="margin-top: 10px;">
+          Size: <span id="atom-size">0.30</span> | Electrons: <span id="atom-electrons">5</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Banner container for other scenes -->
   <div id="banner-container" class="banner-container">
     <div id="banner-text" class="banner-text">
@@ -522,5 +589,6 @@
   <script type="module" src="app.js"></script>
   <script type="module" src="banner.js"></script>
   <script type="module" src="formula-controller.js"></script>
+  <script type="module" src="lateral-menu.js"></script>
 </body>
 </html>

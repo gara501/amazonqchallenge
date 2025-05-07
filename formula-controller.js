@@ -8,7 +8,10 @@ class FormulaController {
       julia: document.getElementById('formula-julia'),
       mandelbrot: document.getElementById('formula-mandelbrot'),
       newton: document.getElementById('formula-newton'),
-      menger: document.getElementById('formula-menger')
+      menger: document.getElementById('formula-menger'),
+      koch: document.getElementById('formula-koch'),
+      blood: document.getElementById('formula-blood'),
+      atoms: document.getElementById('formula-atoms')
     };
     
     // Get formula value elements
@@ -18,7 +21,13 @@ class FormulaController {
       juliaC: document.getElementById('julia-c'),
       mandelbrotOffset: document.getElementById('mandelbrot-offset'),
       newtonDegree: document.getElementById('newton-degree'),
-      newtonRelaxation: document.getElementById('newton-relaxation')
+      newtonRelaxation: document.getElementById('newton-relaxation'),
+      kochScale: document.getElementById('koch-scale'),
+      kochIterations: document.getElementById('koch-iterations'),
+      bloodScale: document.getElementById('blood-scale'),
+      bloodDetail: document.getElementById('blood-detail'),
+      atomSize: document.getElementById('atom-size'),
+      atomElectrons: document.getElementById('atom-electrons')
     };
     
     // Initialize mouse position
@@ -105,6 +114,26 @@ class FormulaController {
             this.renderMathJax();
           }
           break;
+      case 7: // Koch
+          if (this.formulaContainers.koch) {
+            this.formulaContainers.koch.style.display = 'block';
+            this.renderMathJax();
+          }
+          break;
+      case 8: // Blood Vessels
+          if (this.formulaContainers.blood) {
+            this.formulaContainers.blood.style.display = 'block';
+            this.renderMathJax();
+          }
+          break;
+      case 9: // Atoms
+          if (this.formulaContainers.atoms) {
+            this.formulaContainers.atoms.style.display = 'block';
+            // Position the formula container lower to avoid overlap with the quote
+            this.formulaContainers.atoms.style.top = '75%';
+            this.renderMathJax();
+          }
+          break;
       }
     });
   }
@@ -127,6 +156,18 @@ class FormulaController {
         break;
       case 5:
         currentContainer = this.formulaContainers.menger;
+        break;
+      case 6:
+        currentContainer = this.formulaContainers.menger;
+        break;
+      case 7:
+        currentContainer = this.formulaContainers.koch;
+        break;
+      case 8:
+        currentContainer = this.formulaContainers.blood;
+        break;
+      case 9:
+        currentContainer = this.formulaContainers.atoms;
         break;
     }
     
@@ -174,6 +215,18 @@ class FormulaController {
         break;
       case 5:
         glowColor = 'rgba(255, 136, 0, 0.3)';
+        break;
+      case 6:
+        glowColor = 'rgba(0, 191, 255, 0.3)';
+        break;
+      case 7:
+        glowColor = 'rgba(0, 255, 170, 0.3)';
+        break;
+      case 8:
+        glowColor = 'rgba(255, 51, 51, 0.3)';
+        break;
+      case 9:
+        glowColor = 'rgba(0, 255, 255, 0.3)';
         break;
     }
     
@@ -227,6 +280,39 @@ class FormulaController {
         if (this.formulaValues.newtonRelaxation) {
           const relaxation = (0.5 + normalizedY * 1.0).toFixed(2);
           this.formulaValues.newtonRelaxation.textContent = relaxation;
+        }
+        break;
+        
+      case 7: // Koch
+        if (this.formulaValues.kochScale) {
+          const scale = (0.5 + normalizedX * 1.5).toFixed(2);
+          this.formulaValues.kochScale.textContent = scale;
+        }
+        if (this.formulaValues.kochIterations) {
+          const iterations = Math.floor(1 + normalizedY * 7);
+          this.formulaValues.kochIterations.textContent = iterations;
+        }
+        break;
+        
+      case 8: // Blood Vessels
+        if (this.formulaValues.bloodScale) {
+          const scale = (2.0 + normalizedX * 3.0).toFixed(2);
+          this.formulaValues.bloodScale.textContent = scale;
+        }
+        if (this.formulaValues.bloodDetail) {
+          const detail = Math.floor(2 + normalizedY * 4);
+          this.formulaValues.bloodDetail.textContent = detail;
+        }
+        break;
+        
+      case 9: // Atoms
+        if (this.formulaValues.atomSize) {
+          const size = (0.2 + normalizedX * 0.2).toFixed(2);
+          this.formulaValues.atomSize.textContent = size;
+        }
+        if (this.formulaValues.atomElectrons) {
+          const electrons = Math.floor(2 + normalizedY * 6);
+          this.formulaValues.atomElectrons.textContent = electrons;
         }
         break;
     }

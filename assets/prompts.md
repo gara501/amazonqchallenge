@@ -50,3 +50,9 @@ In the scenes where we have fractals add text in the center of the screen, this 
 
 Prompt 15
 Create a full-screen WebGL fragment shader using Three.js and ShaderMaterial that renders a menger sponge set fractal. The fractal should react dynamically to mouse movement: moving the mouse changes the constants used in the menger sponge set equation. The project should include time and resolution uniforms, and display the fractal in real time. Create this in scene 6, create the button in main page to go to this scene. Load music6.mp3 when load this scene.
+
+Create a full-screen WebGL fragment shader using Three.js and ShaderMaterial that renders a Koch curve set fractal. The fractal should react dynamically to mouse movement: moving the mouse changes the constants used in the Koch curve set equation. The project should include time and resolution uniforms, and display the fractal in real time. Create this in scene 7, create the button in main page to go to this scene. Load music7.mp3 when load this scene.
+
+Create a full-screen WebGL fragment shader using Three.js and ShaderMaterial that renders a Blood vessels set fractal. The fractal should react dynamically to mouse movement: moving the mouse changes the constants used in the Blood vessels set equation. The project should include time and resolution uniforms, and display the fractal in real time. Create this in scene 8, create the button in main page to go to this scene. Load music8.mp3 when load this scene.
+
+Create a lateral menu on each scene with buttons to access to each scene, this menu will have beautiful buttons with subtle animations, add a transition when the scenes are entering
