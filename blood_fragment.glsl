@@ -64,8 +64,8 @@ float fbm(vec2 p) {
     float frequency = 1.0;
     
     // Mouse controls the level of detail and scale
-    int octaves = int(mix(2.0, 6.0, u_mouse.y));
-    float lacunarity = mix(1.5, 3.0, u_mouse.x);
+    int octaves = int(mix(2.0, 7.0, u_mouse.y));
+    float lacunarity = mix(1.3, 3.4, u_mouse.x);
     
     for (int i = 0; i < 6; i++) {
         if (i >= octaves) break;
@@ -104,7 +104,7 @@ float bloodVessels(vec2 p) {
 // Function to create blood vessel network
 float bloodVesselNetwork(vec2 p) {
     // Scale based on mouse position
-    float scale = mix(2.0, 5.0, u_mouse.x);
+    float scale = mix(1.4, 6.2, u_mouse.x);
     p *= scale;
     
     // Get base pattern

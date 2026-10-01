@@ -52,8 +52,6 @@ class FormulaController {
       // Apply hover effect to formula containers
       this.applyHoverEffect();
       
-      // Update formula values based on mouse position
-      this.updateFormulaValues();
     });
     
     // Handle touch events for mobile
@@ -65,8 +63,6 @@ class FormulaController {
         // Apply hover effect to formula containers
         this.applyHoverEffect();
         
-        // Update formula values based on touch position
-        this.updateFormulaValues();
       }
     });
   }
@@ -257,8 +253,8 @@ class FormulaController {
         
       case 3: // Julia
         if (this.formulaValues.juliaC) {
-          const real = (-0.8 + normalizedX * 1.6).toFixed(2);
-          const imag = (-0.8 + normalizedY * 1.6).toFixed(2);
+          const real = (-1.0 + normalizedX * 0.6).toFixed(2);
+          const imag = (-0.08 + normalizedY * 0.7).toFixed(2);
           const sign = imag >= 0 ? '+' : '';
           this.formulaValues.juliaC.textContent = `${real} ${sign} ${imag}i`;
         }

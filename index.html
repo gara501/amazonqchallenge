@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Fractal Madness- Amazon Q</title>
+  <title>Fractal / Un laboratorio del infinito</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090b">
   <!-- Favicon -->
   <link rel="icon" href="assets/images/amazonq.ico" type="image/x-icon">
   <link rel="shortcut icon" href="assets/images/amazonq.ico" type="image/x-icon">
@@ -396,24 +398,73 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <!-- MathJax for formula rendering -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <link rel="stylesheet" href="experience.css?v=11">
 </head>
 <body>
   <!-- Loading screen -->
   <div id="loading-screen">
-    <div id="loading-text">LOADING EXPERIENCE...</div>
+    <div class="loading-kicker">UN LABORATORIO DEL INFINITO <span>●</span> EXPERIENCIA INTERACTIVA</div>
+    <div class="loading-art" aria-hidden="true"><div class="loading-art-core"></div></div>
+    <div class="loading-heading">ENTRA EN<br><em>EL INFINITO.</em></div>
+    <p class="loading-description">Nueve universos matemáticos. Un gesto tuyo cambia lo que ves.</p>
+    <div id="loading-text">PREPARANDO EL UNIVERSO</div>
     <div id="loading-bar-container">
       <div id="loading-bar"></div>
     </div>
-    <button id="start-button">START EXPERIENCE</button>
+    <button id="start-button">EXPLORAR <span aria-hidden="true">↗</span></button>
+    <div class="loading-footer"><span>01 — 09 / FRACTALES EN TIEMPO REAL</span><span>MUEVE EL CURSOR PARA INTERACTUAR</span></div>
   </div>
 
   <!-- Scene transition overlay -->
   <div id="scene-transition"></div>
 
   <!-- Control buttons -->
-  <button id="mute-button" class="control-button" title="Mute/Unmute Sound">♪</button>
+  <button id="mute-button" class="control-button" title="Activar o silenciar sonido" aria-label="Activar o silenciar sonido">♪</button>
+
+  <div class="experience-vignette" aria-hidden="true"></div>
+  <header class="experience-header" aria-label="Cabecera">
+    <div class="brand-mark"><span class="brand-orbit" aria-hidden="true">◌</span><span>FRACTAL<span class="brand-dot">.</span></span></div>
+    <span class="header-edition">UN LABORATORIO DEL INFINITO&nbsp; / &nbsp;VOL. 01</span>
+    <span class="header-live"><span></span> EN VIVO</span>
+  </header>
+  <main class="experience-copy" aria-live="polite">
+    <span class="eyebrow" id="scene-eyebrow">01 / 09 &nbsp;—&nbsp; EL ORIGEN</span>
+    <h1 id="scene-heading">EL INFINITO<br><em>ESTÁ VIVO.</em></h1>
+    <p id="scene-description">Cada movimiento altera este universo. Explora las formas, descubre el patrón y deja que las matemáticas respondan.</p>
+  </main>
+  <div class="experience-actions" aria-label="Acciones de la experiencia">
+    <button id="freeze-button" class="experience-action" type="button" aria-pressed="false"><span aria-hidden="true">◉</span> CONGELAR INSTANTE</button>
+    <button id="save-button" class="experience-action" type="button" hidden><span aria-hidden="true">↓</span> GUARDAR PNG</button>
+    <button id="reading-button" class="experience-action experience-action-secondary" type="button" aria-expanded="false" aria-controls="symbolic-panel" hidden><span aria-hidden="true">✳</span> OTRA LECTURA</button>
+  </div>
+  <aside id="symbolic-panel" class="symbolic-panel" aria-label="Lectura del fractal" hidden>
+    <div id="reading-card" class="reading-card">
+      <div class="reading-card-inner">
+        <section id="reading-front" class="reading-face reading-front" aria-labelledby="symbolic-title">
+          <div class="symbolic-panel-top"><span>01 / LECTURA POÉTICA</span><button id="reading-close" type="button" aria-label="Cerrar tarjeta">×</button></div>
+          <h2 id="symbolic-title"></h2>
+          <p id="symbolic-text"></p>
+          <div class="reading-face-footer">
+            <small>Una interpretación poética, no una propiedad matemática.</small>
+            <button id="flip-to-math" class="reading-flip" type="button">VER LA MATEMÁTICA <span aria-hidden="true">↗</span></button>
+          </div>
+        </section>
+        <section id="reading-back" class="reading-face reading-back" aria-labelledby="math-title" aria-hidden="true" inert>
+          <div class="symbolic-panel-top"><span>02 / LA MATEMÁTICA</span><button id="reading-close-back" type="button" aria-label="Cerrar tarjeta">×</button></div>
+          <h2 id="math-title"></h2>
+          <p id="math-formula" class="math-formula"></p>
+          <p id="math-explanation" class="math-explanation"></p>
+          <p id="math-discovery" class="math-discovery"></p>
+          <div class="reading-face-footer reading-back-footer">
+            <a id="math-source" href="#" target="_blank" rel="noopener noreferrer">CONSULTAR FUENTE ↗</a>
+            <button id="flip-to-poetry" class="reading-flip" type="button"><span aria-hidden="true">↶</span> VOLVER A LA POESÍA</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div class="interaction-hint"><span class="hint-icon" aria-hidden="true">✳</span><span>MUEVE EL CURSOR<br><small>EL UNIVERSO RESPONDE</small></span></div>
 
   <!-- Star Wars style intro for Scene 1 -->
   <div id="starwars-container" class="starwars-container">
@@ -513,10 +564,13 @@
       <div class="formula-title">Menger Sponge Fractal</div>
       <div class="formula-text">
         <div>
-          \(d(p) = \lim_{n \to \infty} s^{-n} \cdot |p_n|\)
+          \(d_0(p)=d_{\mathrm{cubo}}(p)\)
+        </div>
+        <div>
+          \(d_{n+1}(p)=\max(d_n(p),-d_{\mathrm{túnel},n}(p))\)
         </div>
         <div style="margin-top: 10px;">
-          Scale: <span id="menger-scale">3.0</span> | Variation: <span id="menger-variation">1.0</span>
+          Escala: <span id="menger-scale">3.0</span> | Giro: <span id="menger-variation">1.0</span>
         </div>
       </div>
     </div>
@@ -586,9 +640,9 @@
       }
     }
   </script>
-  <script type="module" src="app.js"></script>
-  <script type="module" src="banner.js"></script>
-  <script type="module" src="formula-controller.js"></script>
-  <script type="module" src="lateral-menu.js"></script>
+  <script type="module" src="app.js?v=9"></script>
+  <script type="module" src="formula-controller.js?v=8"></script>
+  <script type="module" src="lateral-menu.js?v=9"></script>
+  <script type="module" src="experience-tools.js?v=6"></script>
 </body>
 </html>

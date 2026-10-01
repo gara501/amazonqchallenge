@@ -78,8 +78,8 @@ void main() {
     uv *= zoom;
     
     // Calculate parameters based on mouse position
-    float scale = map(u_mouse.x, 0.0, 1.0, 1.8, 2.2);
-    float variation = map(u_mouse.y, 0.0, 1.0, 0.5, 2.0);
+    float scale = map(u_mouse.x, 0.0, 1.0, 1.55, 2.45);
+    float variation = map(u_mouse.y, 0.0, 1.0, 0.25, 2.5);
     
     // Add some time-based movement when mouse isn't moving
     vec2 offset = vec2(

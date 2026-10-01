@@ -133,8 +133,13 @@ void main() {
     
     // Calculate parameters based on mouse position
     // Map mouse from (0,0)-(1,1) to parameter ranges
-    int degree = int(map(u_mouse.x, 0.0, 1.0, 3.0, 6.9)); // 3 to 6
+    int degree = int(map(u_mouse.x, 0.0, 1.0, 2.0, 6.9)); // 2 to 6
     float relaxation = map(u_mouse.y, 0.0, 1.0, 0.5, 1.5); // 0.5 to 1.5
+
+    // Give continuous feedback while the integer degree changes in steps.
+    float pointerAngle = (u_mouse.x - 0.5) * 0.7;
+    uv = mat2(cos(pointerAngle), -sin(pointerAngle),
+              sin(pointerAngle), cos(pointerAngle)) * uv;
     
     // Add some time-based movement when mouse isn't moving
     vec2 offset = vec2(

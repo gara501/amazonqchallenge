@@ -1,334 +1,72 @@
-// lateral-menu.js - Creates a lateral menu with animated buttons for scene navigation
+import { getSceneController } from './scene-controller.js?v=9';
 
-import { getSceneController } from './scene-controller.js';
+const chapters = [
+  { type: 'crt', name: 'Origen', title: 'EL INFINITO', accent: 'ESTÁ VIVO.', description: 'Una espiral nace del pulso y vuelve sobre sí misma. Cada giro repite una forma distinta: el infinito empieza donde mueves la mano.' },
+  { type: 'sierpinski', name: 'Sierpinski', title: 'ORDEN DENTRO', accent: 'DEL CAOS.', description: 'Un triángulo se divide, deja un vacío y repite el gesto en cada fragmento. Lo que desaparece también dibuja la forma.', symbol: 'EL VACÍO CREA ESPACIO', reading: 'El triángulo se repliega una y otra vez. Como imagen espiritual, ese vacío puede recordar el Tzimtzum: retirarse para que algo nuevo pueda nacer.' },
+  { type: 'fractal', name: 'Julia', title: 'OTRO MUNDO', accent: 'EN CADA PUNTO.', description: 'Cada punto recorre la misma ecuación, pero un solo valor cambia su destino. Al mover el cursor, nacen fronteras de mundos posibles.', symbol: 'MUNDOS POSIBLES', reading: 'Al fijar un solo valor, aparece un universo distinto. Es fácil leer en esas formas una imagen de nuestros estados interiores: una mínima variación transforma el paisaje entero.' },
+  { type: 'mandelbrot', name: 'Mandelbrot', title: 'NUNCA VERÁS', accent: 'EL FINAL.', description: 'Una regla mínima decide qué puntos permanecen y cuáles escapan. En su frontera, cada acercamiento revela otro paisaje sin fin.', symbol: 'EL TODO EN LA PARTE', reading: 'Sus ecos a distintas escalas inspiran la idea del microcosmos dentro del macrocosmos. Una frontera acotada abre la imaginación hacia lo inagotable.' },
+  { type: 'newton', name: 'Newton', title: 'TODO BUSCA', accent: 'SU EQUILIBRIO.', description: 'Cada punto busca una raíz. El camino de sus aproximaciones tiñe el plano, y entre destinos vecinos aparecen fronteras inesperadas.', symbol: 'CAMINOS Y DESTINOS', reading: 'Cada punto avanza hacia una raíz; comienzos muy cercanos pueden llegar a lugares distintos. Una metáfora de la elección y de las consecuencias de un gesto pequeño.' },
+  { type: 'menger', name: 'Menger', title: 'VACÍO QUE', accent: 'TOMA FORMA.', description: 'Un cubo pierde su centro y repite la ausencia a menor escala. La materia se adelgaza; el vacío, en cambio, se vuelve arquitectura.', symbol: 'LO QUE SOSTIENE EL VACÍO', reading: 'Al retirar materia, la estructura se vuelve más visible. Puede evocar la idea de Maya: la solidez como apariencia atravesada por espacios que también dan forma.' },
+  { type: 'koch', name: 'Koch', title: 'UNA LÍNEA', accent: 'SIN FIN.', description: 'Cada tramo se quiebra en otros más pequeños. La curva crece sin agotar jamás su detalle: una costa imaginaria hecha de repeticiones.', symbol: 'EL BORDE INAGOTABLE', reading: 'En su construcción ideal, el perímetro crece sin límite mientras la figura permanece acotada. Una imagen de lo inmenso contenido en un lugar pequeño.' },
+  { type: 'blood', name: 'Vasos', title: 'PATRONES', accent: 'QUE VIVEN.', description: 'Como ríos bajo la piel, las ramas se bifurcan y vuelven a bifurcarse. La vida encuentra caminos multiplicando una misma forma.', symbol: 'LA FORMA QUE CONECTA', reading: 'Venas, ríos y raíces comparten el gesto de bifurcarse. En una lectura simbólica, recuerdan al Árbol de la Vida: muchos caminos nacidos de una misma fuente.' },
+  { type: 'atoms', name: 'Átomos', title: 'EL UNIVERSO', accent: 'EN LO MÍNIMO.', description: 'Esta escena imagina átomos en movimiento. No es un fractal clásico, pero su danza recuerda que un patrón puede resonar entre escalas.', symbol: 'MUNDOS DENTRO DE MUNDOS', reading: 'Esta escena usa una analogía visual, no un modelo físico del átomo. Invita a imaginar escalas anidadas, como universos alojados unos dentro de otros.' }
+];
 
 class LateralMenu {
   constructor() {
-    // Create the menu container
-    this.createMenuContainer();
-    
-    // Create scene buttons
-    this.createSceneButtons();
-    
-    // Get scene controller
     this.sceneController = getSceneController();
-    
-    // Listen for scene changes
-    this.setupSceneChangeListener();
-    
-    // Add hover animations
-    this.addHoverAnimations();
-  }
-  
-  createMenuContainer() {
-    // Create menu container
-    this.menuContainer = document.createElement('div');
-    this.menuContainer.id = 'lateral-menu';
-    this.menuContainer.className = 'lateral-menu visible'; // Added 'visible' class to keep menu open by default
-    
-    // Add to DOM
-    document.body.appendChild(this.menuContainer);
-    
-    // Add CSS for the menu
-    const style = document.createElement('style');
-    style.textContent = `
-      .lateral-menu {
-        position: fixed;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px;
-        background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(10px);
-        border-radius: 0 15px 15px 0;
-        z-index: 1500;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        transition: transform 0.3s ease;
-        transform: translateX(-100%) translateY(-50%);
-      }
-      
-      .lateral-menu.visible {
-        transform: translateX(0) translateY(-50%);
-      }
-      
-      .lateral-menu-button {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        font-family: "VT323", "Courier New", monospace;
-        font-size: 20px;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-      }
-      
-      .lateral-menu-button::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-      
-      .lateral-menu-button:hover::before {
-        opacity: 1;
-      }
-      
-      .lateral-menu-button.active {
-        transform: scale(1.1);
-        box-shadow: 0 0 15px currentColor;
-      }
-      
-      .lateral-menu-button.scene-1 {
-        color: #00ffff;
-        border-color: #00ffff;
-        text-shadow: 0 0 5px #00ffff;
-        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-      }
-      
-      .lateral-menu-button.scene-2 {
-        color: #ffcc00;
-        border-color: #ffcc00;
-        text-shadow: 0 0 5px #ffcc00;
-        box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
-      }
-      
-      .lateral-menu-button.scene-3 {
-        color: #ff00ff;
-        border-color: #ff00ff;
-        text-shadow: 0 0 5px #ff00ff;
-        box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
-      }
-      
-      .lateral-menu-button.scene-4 {
-        color: #00ff88;
-        border-color: #00ff88;
-        text-shadow: 0 0 5px #00ff88;
-        box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-      }
-      
-      .lateral-menu-button.scene-5 {
-        color: #ff8800;
-        border-color: #ff8800;
-        text-shadow: 0 0 5px #ff8800;
-        box-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
-      }
-      
-      .lateral-menu-button.scene-6 {
-        color: #00bfff;
-        border-color: #00bfff;
-        text-shadow: 0 0 5px #00bfff;
-        box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
-      }
-      
-      .lateral-menu-button.scene-7 {
-        color: #00ffaa;
-        border-color: #00ffaa;
-        text-shadow: 0 0 5px #00ffaa;
-        box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
-      }
-      
-      .lateral-menu-toggle {
-        position: fixed;
-        left: 20px;
-        top: 20px;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: rgba(0, 0, 0, 0.5);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        z-index: 1600;
-        font-size: 20px;
-        transition: all 0.3s ease;
-      }
-      
-      .lateral-menu-toggle:hover {
-        background: rgba(0, 0, 0, 0.7);
-        transform: scale(1.1);
-      }
-      
-      .lateral-menu-tooltip {
-        position: absolute;
-        left: 70px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-family: "VT323", "Courier New", monospace;
-        font-size: 14px;
-        white-space: nowrap;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-      }
-      
-      .lateral-menu-button:hover .lateral-menu-tooltip {
-        opacity: 1;
-      }
-      
-      /* Scene transition overlay */
-      .scene-transition-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: black;
-        z-index: 1800;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.5s ease;
-      }
-      
-      .scene-transition-overlay.active {
-        opacity: 1;
-      }
-    `;
-    document.head.appendChild(style);
-    
-    // Create toggle button
-    this.toggleButton = document.createElement('div');
-    this.toggleButton.className = 'lateral-menu-toggle';
-    this.toggleButton.innerHTML = '≡';
-    this.toggleButton.title = 'Toggle Scene Menu';
-    document.body.appendChild(this.toggleButton);
-    
-    // Add click event to toggle button
-    this.toggleButton.addEventListener('click', () => {
-      this.menuContainer.classList.toggle('visible');
-      this.toggleButton.innerHTML = this.menuContainer.classList.contains('visible') ? '×' : '≡';
+    this.nav = document.createElement('nav');
+    this.nav.className = 'chapter-nav';
+    this.nav.setAttribute('aria-label', 'Seleccionar fractal');
+    this.nav.innerHTML = `
+      <div class="chapter-nav-top"><span>EXPLORA LOS UNIVERSOS</span><span id="chapter-counter">01 <span>/ 09</span></span></div>
+      <div class="chapter-list"></div>
+      <div class="chapter-nav-bottom"><span>← &nbsp;→ &nbsp; CAMBIAR DE ESCENA</span><span>HECHO DE MATEMÁTICAS Y CURIOSIDAD</span></div>`;
+    document.body.appendChild(this.nav);
+    this.list = this.nav.querySelector('.chapter-list');
+
+    chapters.forEach((chapter, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'chapter-button';
+      button.dataset.scene = chapter.type;
+      button.innerHTML = `<span class="chapter-number">${String(index + 1).padStart(2, '0')}</span><span class="chapter-name">${chapter.name}</span>`;
+      button.addEventListener('click', () => this.sceneController.createScene(chapter.type));
+      this.list.appendChild(button);
     });
-    
-    // Set initial toggle button state to match menu visibility
-    this.toggleButton.innerHTML = '×';
-    
-    // Create transition overlay
-    this.transitionOverlay = document.createElement('div');
-    this.transitionOverlay.className = 'scene-transition-overlay';
-    document.body.appendChild(this.transitionOverlay);
-  }
-  
-  createSceneButtons() {
-    // Scene names and descriptions
-    const scenes = [
-      { name: 'Psychedelic', type: 'crt', number: 1 },
-      { name: 'Sierpinski', type: 'sierpinski', number: 2 },
-      { name: 'Julia Set', type: 'fractal', number: 3 },
-      { name: 'Mandelbrot', type: 'mandelbrot', number: 4 },
-      { name: 'Newton', type: 'newton', number: 5 },
-      { name: 'Menger Sponge', type: 'menger', number: 6 },
-      { name: 'Koch Curve', type: 'koch', number: 7 },
-      { name: 'Blood Vessels', type: 'blood', number: 8 },
-      { name: 'Atoms', type: 'atoms', number: 9 }
-    ];
-    
-    // Create buttons for each scene
-    scenes.forEach(scene => {
-      const button = document.createElement('div');
-      button.className = `lateral-menu-button scene-${scene.number}`;
-      button.innerHTML = scene.number;
-      button.dataset.scene = scene.type;
-      button.dataset.sceneNumber = scene.number;
-      
-      // Add tooltip
-      const tooltip = document.createElement('div');
-      tooltip.className = 'lateral-menu-tooltip';
-      tooltip.textContent = scene.name;
-      button.appendChild(tooltip);
-      
-      // Add click event
-      button.addEventListener('click', () => {
-        this.switchScene(scene.type, scene.number);
-      });
-      
-      // Add to menu
-      this.menuContainer.appendChild(button);
+
+    window.addEventListener('scene-changed', event => this.update(event.detail.sceneNumber));
+    document.addEventListener('keydown', event => {
+      if (event.altKey || event.ctrlKey || event.metaKey || /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '')) return;
+      if (document.getElementById('loading-screen')?.style.display !== 'none') return;
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+      event.preventDefault();
+      const step = event.key === 'ArrowRight' ? 1 : -1;
+      const next = (this.sceneController.currentSceneNumber - 1 + step + chapters.length) % chapters.length;
+      this.sceneController.createScene(chapters[next].type);
     });
+    this.update(this.sceneController.currentSceneNumber);
   }
-  
-  setupSceneChangeListener() {
-    // Listen for scene changes
-    window.addEventListener('scene-changed', (event) => {
-      const sceneNumber = event.detail.sceneNumber;
-      
-      // Update active button
-      const buttons = this.menuContainer.querySelectorAll('.lateral-menu-button');
-      buttons.forEach(button => {
-        button.classList.remove('active');
-        if (parseInt(button.dataset.sceneNumber) === sceneNumber) {
-          button.classList.add('active');
-        }
-      });
+
+  update(sceneNumber) {
+    const index = Math.max(0, Math.min(chapters.length - 1, sceneNumber - 1));
+    const chapter = chapters[index];
+    this.nav.querySelectorAll('.chapter-button').forEach((button, i) => {
+      button.classList.toggle('active', i === index);
+      if (i === index) button.setAttribute('aria-current', 'true');
+      else button.removeAttribute('aria-current');
     });
-  }
-  
-  addHoverAnimations() {
-    // Add hover animations to buttons
-    const buttons = this.menuContainer.querySelectorAll('.lateral-menu-button');
-    
-    buttons.forEach(button => {
-      // Pulse animation
-      button.addEventListener('mouseenter', () => {
-        button.style.transform = 'scale(1.1)';
-      });
-      
-      button.addEventListener('mouseleave', () => {
-        button.style.transform = button.classList.contains('active') ? 'scale(1.1)' : 'scale(1.0)';
-      });
-    });
-  }
-  
-  switchScene(sceneType, sceneNumber) {
-    // Start transition animation
-    this.transitionOverlay.classList.add('active');
-    
-    // Switch scene after a short delay
-    setTimeout(() => {
-      if (this.sceneController) {
-        this.sceneController.createScene(sceneType);
-      }
-      
-      // End transition animation
-      setTimeout(() => {
-        this.transitionOverlay.classList.remove('active');
-      }, 300);
-    }, 500);
+    document.getElementById('chapter-counter').innerHTML = `${String(sceneNumber).padStart(2, '0')} <span>/ 09</span>`;
+    document.getElementById('scene-eyebrow').textContent = `${String(sceneNumber).padStart(2, '0')} / 09  —  ${chapter.name.toUpperCase()}`;
+    document.getElementById('scene-heading').innerHTML = `${chapter.title}<br><em>${chapter.accent}</em>`;
+    document.getElementById('scene-description').textContent = chapter.description;
+    document.body.dataset.scene = String(sceneNumber);
+    this.list.querySelector('.active')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
 }
 
-// Initialize the lateral menu when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-  // Wait a short time to ensure DOM is fully loaded
-  setTimeout(() => {
-    window.lateralMenu = new LateralMenu();
-    
-    // Make sure the menu is visible after initialization
-    const menu = document.getElementById('lateral-menu');
-    if (menu) {
-      menu.classList.add('visible');
-    }
-  }, 1000);
+  window.lateralMenu = new LateralMenu();
 });
 
-export { LateralMenu };
+export { LateralMenu, chapters };

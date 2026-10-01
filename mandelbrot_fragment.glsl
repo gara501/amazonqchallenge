@@ -10,7 +10,7 @@ uniform float u_audioLevel; // Audio level for reactivity
 // Constants for the fractal
 const int MAX_ITERATIONS = 300;
 const float ESCAPE_RADIUS = 4.0;
-const float ZOOM_BASE = 4.0;
+const float ZOOM_BASE = 0.8;
 
 // Function to map a value from one range to another
 float map(float value, float inMin, float inMax, float outMin, float outMax) {
@@ -78,7 +78,7 @@ void main() {
     vec2 offset = vec2(
         map(u_mouse.x, 0.0, 1.0, -1.0, 1.0),
         map(u_mouse.y, 0.0, 1.0, -1.0, 1.0)
-    ) * 0.5; // Scale down the effect
+    ) * 0.85;
     
     // Add some time-based movement when mouse isn't moving
     offset += vec2(
@@ -87,7 +87,7 @@ void main() {
     ) * (1.0 - length(u_mouse - vec2(0.5)) * 2.0);
     
     // Apply zoom and offset to coordinates
-    vec2 c = uv / zoom + offset;
+    vec2 c = uv / zoom + offset + vec2(-0.35, 0.0);
     
     // Add a slight time-based rotation to the coordinates
     float angle = u_time * 0.01;

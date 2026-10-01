@@ -1,11 +1,11 @@
 // Main application entry point
 import { getAudioController } from './audio-controller.js';
-import { getSceneController } from './scene-controller.js';
+import { getSceneController } from './scene-controller.js?v=9';
 
 // Asset loader
 class AssetLoader {
   constructor() {
-    this.totalAssets = 22; // Shaders, music, textures, etc.
+    this.totalAssets = 0;
     this.loadedAssets = 0;
     this.loadingBar = document.getElementById('loading-bar');
     this.loadingScreen = document.getElementById('loading-screen');
@@ -61,6 +61,7 @@ class AssetLoader {
       this.preloadAudio('assets/music8.mp3'),
       this.preloadAudio('assets/music9.mp3')
     ];
+    this.totalAssets = assets.length;
     
     // Update progress for each loaded asset
     let loadedCount = 0;
@@ -142,7 +143,7 @@ class AssetLoader {
     // Show start button
     this.startButton.style.display = 'block';
     this.loadingText = document.getElementById('loading-text');
-    this.loadingText.textContent = 'READY!';
+    this.loadingText.textContent = 'LISTO PARA EXPLORAR';
   }
   
   startDemo() {

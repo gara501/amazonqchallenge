@@ -1,6 +1,7 @@
 // menger_scene.js
 import * as THREE from 'three';
 import { getAudioController } from './audio-controller.js';
+import { initializePointerMotion, setPointerTarget, advancePointerMotion, removePointerListeners } from './pointer-motion.js?v=9';
 
 export class MengerScene {
   constructor() {
@@ -13,17 +14,9 @@ export class MengerScene {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
     
-    // Initialize mouse position
+    // The shader reads this vector; pointer events only move its target.
     this.mouse = new THREE.Vector2(0.5, 0.5);
-    
-    // Handle window resize
-    window.addEventListener('resize', this.onWindowResize.bind(this));
-    
-    // Handle mouse movement
-    window.addEventListener('mousemove', this.onMouseMove.bind(this));
-    
-    // Handle touch movement for mobile devices
-    window.addEventListener('touchmove', this.onTouchMove.bind(this));
+    initializePointerMotion(this);
     
     // Create shader material
     this.createShaderMaterial();
@@ -41,7 +34,7 @@ export class MengerScene {
     this.setupMuteListener();
     
     // Add info text
-    this.addInfoText();
+    // The shared experience UI provides interaction guidance.
     
     // Start animation loop
     this.startTime = Date.now();
@@ -52,7 +45,7 @@ export class MengerScene {
     // Load shader code
     Promise.all([
       fetch('menger_vertex.glsl').then(response => response.text()),
-      fetch('menger_fragment.glsl').then(response => response.text())
+      fetch('menger_fragment.glsl?v=8').then(response => response.text())
     ]).then(([vertexShader, fragmentShader]) => {
       // Shader uniforms
       this.uniforms = {
@@ -199,7 +192,7 @@ export class MengerScene {
   
   setupMuteListener() {
     // Listen for mute/unmute events
-    window.addEventListener('audio-mute-changed', (event) => {
+    this.boundOnAudioMuteChanged = (event) => {
       const isMuted = event.detail.muted;
       
       // When muted, we'll still update the audio level uniform but with a very low value
@@ -209,7 +202,8 @@ export class MengerScene {
       } else {
         this.audioMuted = false;
       }
-    });
+    };
+    window.addEventListener('audio-mute-changed', this.boundOnAudioMuteChanged);
   }
   
   updateAudioLevel() {
@@ -235,9 +229,7 @@ export class MengerScene {
         if (this.uniforms && this.uniforms.u_audioLevel) {
           this.uniforms.u_audioLevel.value = this.uniforms.u_audioLevel.value * 0.85 + avg * 0.15;
         }
-        
-        // Update formula values
-        this.updateFormulaValues();
+
       } catch (e) {
         console.warn('Error updating audio level:', e);
       }
@@ -255,7 +247,7 @@ export class MengerScene {
       const variationElement = document.getElementById('menger-variation');
       
       if (scaleElement) {
-        const scale = (2.8 + mouseX * 0.4).toFixed(2);
+        const scale = (2.65 + mouseX * 0.7).toFixed(2);
         scaleElement.textContent = scale;
       }
       
@@ -267,36 +259,19 @@ export class MengerScene {
   }
   
   onMouseMove(event) {
-    // Update mouse position (normalized from 0 to 1)
-    this.mouse.x = event.clientX / window.innerWidth;
-    this.mouse.y = 1.0 - (event.clientY / window.innerHeight); // Invert Y for mathematical convention
-    
-    // Update uniform if it exists
-    if (this.uniforms && this.uniforms.u_mouse) {
-      this.uniforms.u_mouse.value = this.mouse;
-    }
-    
-    // Update formula values
-    this.updateFormulaValues();
+    setPointerTarget(this, event.clientX, event.clientY);
   }
-  
+
   onTouchMove(event) {
-    // Prevent default to avoid scrolling
+    if (event.target.closest('.chapter-nav')) return;
     event.preventDefault();
-    
     if (event.touches.length > 0) {
-      // Update mouse position (normalized from 0 to 1)
-      this.mouse.x = event.touches[0].clientX / window.innerWidth;
-      this.mouse.y = 1.0 - (event.touches[0].clientY / window.innerHeight); // Invert Y for mathematical convention
-      
-      // Update uniform if it exists
-      if (this.uniforms && this.uniforms.u_mouse) {
-        this.uniforms.u_mouse.value = this.mouse;
-      }
-      
-      // Update formula values
-      this.updateFormulaValues();
+      setPointerTarget(this, event.touches[0].clientX, event.touches[0].clientY);
     }
+  }
+
+  removeEventListeners() {
+    removePointerListeners(this);
   }
   
   addInfoText() {
@@ -336,6 +311,9 @@ export class MengerScene {
   
   animate() {
     requestAnimationFrame(this.animate.bind(this));
+    if (this.isFrozen) return;
+    advancePointerMotion(this);
+    this.updateFormulaValues();
     
     // Update time uniform
     if (this.uniforms && this.uniforms.u_time) {

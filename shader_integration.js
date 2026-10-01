@@ -168,6 +168,7 @@ export class PsychedelicEffect {
   
   animate() {
     requestAnimationFrame(this.animate.bind(this));
+    if (this.isFrozen) return;
     
     // Update time uniform
     if (this.uniforms && this.uniforms.u_time) {

@@ -147,12 +147,12 @@ void main() {
     float mouseY = u_mouse.y;
     
     // Number of atoms based on mouse Y position
-    int numAtoms = int(mix(3.0, 8.0, mouseY));
+    int numAtoms = int(mix(3.0, 10.0, mouseY));
     
     // Atom parameters based on mouse position
-    float atomSize = mix(0.2, 0.4, mouseX);
-    int electrons = int(mix(2.0, 8.0, mouseY));
-    float eccentricity = mix(0.0, 0.3, mouseX);
+    float atomSize = mix(0.16, 0.52, mouseX);
+    int electrons = int(mix(2.0, 10.0, mouseY));
+    float eccentricity = mix(0.0, 0.6, mouseX);
     
     // Create quantum field background
     vec3 color = quantumField(uv, u_time);

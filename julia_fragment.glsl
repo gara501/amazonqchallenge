@@ -10,7 +10,7 @@ uniform float u_audioLevel; // Audio level for reactivity
 // Constants for the fractal
 const int MAX_ITERATIONS = 100;
 const float ESCAPE_RADIUS = 4.0;
-const float ZOOM_BASE = 2.5;
+const float ZOOM_BASE = 0.8;
 
 // Function to map a value from one range to another
 float map(float value, float inMin, float inMax, float outMin, float outMax) {
@@ -77,8 +77,8 @@ void main() {
     // Calculate Julia set constant from mouse position
     // Map mouse from (0,0)-(1,1) to (-1,-1)-(1,1) with some additional variation
     vec2 c = vec2(
-        map(u_mouse.x, 0.0, 1.0, -0.8, 0.8),
-        map(u_mouse.y, 0.0, 1.0, -0.8, 0.8)
+        map(u_mouse.x, 0.0, 1.0, -1.1, -0.3),
+        map(u_mouse.y, 0.0, 1.0, -0.15, 0.7)
     );
     
     // Add some time-based movement when mouse isn't moving

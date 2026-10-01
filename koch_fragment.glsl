@@ -59,7 +59,7 @@ void main() {
     uv /= zoom; // Divide by zoom to zoom in
     
     // Rotate based on time
-    float angle = u_time * 0.1;
+    float angle = u_time * 0.1 + (u_mouse.y - 0.5) * 0.65;
     float c = cos(angle);
     float s = sin(angle);
     uv = mat2(c, -s, s, c) * uv;

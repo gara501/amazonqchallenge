@@ -181,9 +181,10 @@ export class DemoScene {
   
   animate() {
     requestAnimationFrame(this.animate.bind(this));
+    if (this.isFrozen) return;
     
     // Rotate the objects
-    const time = Date.now() * 0.001; // Convert to seconds
+    const time = (Date.now() - (this.animationPauseMs || 0)) * 0.001;
     
     this.cube.rotation.x += 0.01;
     this.cube.rotation.y += 0.01;

@@ -2,6 +2,7 @@
 
 import * as THREE from 'three';
 import { getAudioController } from './audio-controller.js';
+import { initializePointerMotion, setPointerTarget, advancePointerMotion, removePointerListeners } from './pointer-motion.js?v=9';
 
 export class AtomsScene {
   constructor() {
@@ -14,17 +15,9 @@ export class AtomsScene {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
     
-    // Initialize mouse position
+    // The shader reads this vector; pointer events only move its target.
     this.mouse = new THREE.Vector2(0.5, 0.5);
-    
-    // Handle window resize
-    window.addEventListener('resize', this.onWindowResize.bind(this));
-    
-    // Handle mouse movement
-    window.addEventListener('mousemove', this.onMouseMove.bind(this));
-    
-    // Handle touch movement for mobile devices
-    window.addEventListener('touchmove', this.onTouchMove.bind(this));
+    initializePointerMotion(this);
     
     // Create shader material
     this.createShaderMaterial();
@@ -42,7 +35,7 @@ export class AtomsScene {
     this.setupMuteListener();
     
     // Add info text
-    this.addInfoText();
+    // The shared experience UI provides interaction guidance.
     
     // Add philosophical quote (only for scene 9)
     this.addPhilosophicalQuote();
@@ -56,7 +49,7 @@ export class AtomsScene {
     // Load shader code
     Promise.all([
       fetch('atoms_vertex.glsl').then(response => response.text()),
-      fetch('atoms_fragment.glsl').then(response => response.text())
+      fetch('atoms_fragment.glsl?v=8').then(response => response.text())
     ]).then(([vertexShader, fragmentShader]) => {
       // Shader uniforms
       this.uniforms = {
@@ -203,7 +196,7 @@ export class AtomsScene {
   
   setupMuteListener() {
     // Listen for mute/unmute events
-    window.addEventListener('audio-mute-changed', (event) => {
+    this.boundOnAudioMuteChanged = (event) => {
       const isMuted = event.detail.muted;
       
       // When muted, we'll still update the audio level uniform but with a very low value
@@ -213,7 +206,8 @@ export class AtomsScene {
       } else {
         this.audioMuted = false;
       }
-    });
+    };
+    window.addEventListener('audio-mute-changed', this.boundOnAudioMuteChanged);
   }
   
   updateAudioLevel() {
@@ -239,9 +233,7 @@ export class AtomsScene {
         if (this.uniforms && this.uniforms.u_audioLevel) {
           this.uniforms.u_audioLevel.value = this.uniforms.u_audioLevel.value * 0.85 + avg * 0.15;
         }
-        
-        // Update formula values
-        this.updateFormulaValues();
+
       } catch (e) {
         console.warn('Error updating audio level:', e);
       }
@@ -259,57 +251,31 @@ export class AtomsScene {
       const electronsElement = document.getElementById('atom-electrons');
       
       if (atomSizeElement) {
-        const size = (0.2 + mouseX * 0.2).toFixed(2);
+        const size = (0.16 + mouseX * 0.36).toFixed(2);
         atomSizeElement.textContent = size;
       }
       
       if (electronsElement) {
-        const electrons = Math.floor(2 + mouseY * 6);
+        const electrons = Math.floor(2 + mouseY * 8);
         electronsElement.textContent = electrons;
       }
     }
   }
   
   onMouseMove(event) {
-    // Update mouse position (normalized from 0 to 1)
-    this.mouse.x = event.clientX / window.innerWidth;
-    this.mouse.y = 1.0 - (event.clientY / window.innerHeight); // Invert Y for mathematical convention
-    
-    // Update uniform if it exists
-    if (this.uniforms && this.uniforms.u_mouse) {
-      this.uniforms.u_mouse.value = this.mouse;
-    }
-    
-    // Update formula values
-    this.updateFormulaValues();
-    
-    // Animate the philosophical quote
-    this.animateQuote(event);
+    setPointerTarget(this, event.clientX, event.clientY);
   }
-  
+
   onTouchMove(event) {
-    // Prevent default to avoid scrolling
+    if (event.target.closest('.chapter-nav')) return;
     event.preventDefault();
-    
     if (event.touches.length > 0) {
-      // Update mouse position (normalized from 0 to 1)
-      this.mouse.x = event.touches[0].clientX / window.innerWidth;
-      this.mouse.y = 1.0 - (event.touches[0].clientY / window.innerHeight); // Invert Y for mathematical convention
-      
-      // Update uniform if it exists
-      if (this.uniforms && this.uniforms.u_mouse) {
-        this.uniforms.u_mouse.value = this.mouse;
-      }
-      
-      // Update formula values
-      this.updateFormulaValues();
-      
-      // Animate the philosophical quote
-      this.animateQuote({ 
-        clientX: event.touches[0].clientX, 
-        clientY: event.touches[0].clientY 
-      });
+      setPointerTarget(this, event.touches[0].clientX, event.touches[0].clientY);
     }
+  }
+
+  removeEventListeners() {
+    removePointerListeners(this);
   }
   
   addInfoText() {
@@ -412,6 +378,9 @@ export class AtomsScene {
   
   animate() {
     requestAnimationFrame(this.animate.bind(this));
+    if (this.isFrozen) return;
+    advancePointerMotion(this);
+    this.updateFormulaValues();
     
     // Update time uniform
     if (this.uniforms && this.uniforms.u_time) {

@@ -1,16 +1,16 @@
 // Scene controller for managing scene transitions
-import { DemoScene } from './main.js';
-import { PsychedelicEffect } from './shader_integration.js';
-import { CRTPsychedelicEffect } from './crt_shader_integration.js';
-import { SierpinskiScene } from './sierpinski_scene.js';
-import { FractalScene } from './fractal_scene.js';
-import { MandelbrotScene } from './mandelbrot_scene.js';
-import { NewtonScene } from './newton_scene.js';
+import { DemoScene } from './main.js?v=9';
+import { PsychedelicEffect } from './shader_integration.js?v=9';
+import { CRTPsychedelicEffect } from './crt_shader_integration.js?v=9';
+import { SierpinskiScene } from './sierpinski_scene.js?v=9';
+import { FractalScene } from './fractal_scene.js?v=9';
+import { MandelbrotScene } from './mandelbrot_scene.js?v=9';
+import { NewtonScene } from './newton_scene.js?v=9';
 import { getAudioController } from './audio-controller.js';
-import { MengerScene } from './menger_scene.js';
-import { KochScene } from './koch_scene.js';
-import { BloodScene } from './blood_scene.js';
-import { AtomsScene } from './atoms_scene.js';
+import { MengerScene } from './menger_scene.js?v=9';
+import { KochScene } from './koch_scene.js?v=9';
+import { BloodScene } from './blood_scene.js?v=9';
+import { AtomsScene } from './atoms_scene.js?v=9';
 
 class SceneController {
   constructor() {
