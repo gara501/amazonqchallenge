@@ -399,7 +399,7 @@
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <!-- MathJax for formula rendering -->
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <link rel="stylesheet" href="experience.css?v=11">
+  <link rel="stylesheet" href="experience.css?v=12">
 </head>
 <body>
   <!-- Loading screen -->
@@ -434,7 +434,7 @@
     <p id="scene-description">Cada movimiento altera este universo. Explora las formas, descubre el patrón y deja que las matemáticas respondan.</p>
   </main>
   <div class="experience-actions" aria-label="Acciones de la experiencia">
-    <button id="freeze-button" class="experience-action" type="button" aria-pressed="false"><span aria-hidden="true">◉</span> CONGELAR INSTANTE</button>
+    <button id="freeze-button" class="experience-action" type="button" aria-pressed="false" aria-keyshortcuts="F" title="Congelar o reanudar con la tecla F"><span aria-hidden="true">◉</span> CONGELAR INSTANTE <kbd aria-hidden="true">F</kbd></button>
     <button id="save-button" class="experience-action" type="button" hidden><span aria-hidden="true">↓</span> GUARDAR PNG</button>
     <button id="reading-button" class="experience-action experience-action-secondary" type="button" aria-expanded="false" aria-controls="symbolic-panel" hidden><span aria-hidden="true">✳</span> OTRA LECTURA</button>
   </div>
@@ -643,6 +643,6 @@
   <script type="module" src="app.js?v=9"></script>
   <script type="module" src="formula-controller.js?v=8"></script>
   <script type="module" src="lateral-menu.js?v=9"></script>
-  <script type="module" src="experience-tools.js?v=6"></script>
+  <script type="module" src="experience-tools.js?v=7"></script>
 </body>
 </html>

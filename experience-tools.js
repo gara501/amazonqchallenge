@@ -24,6 +24,11 @@ class ExperienceTools {
     document.getElementById('flip-to-poetry').addEventListener('click', () => this.flipReading(false));
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape') this.closeReading();
+      if (event.key.toLowerCase() !== 'f' || event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
+      const target = event.target;
+      if (target instanceof Element && (target.isContentEditable || target.closest('input, textarea, select, [contenteditable]'))) return;
+      event.preventDefault();
+      this.toggleFreeze();
     });
     window.addEventListener('scene-changed', event => this.changeScene(event.detail.sceneNumber));
     this.changeScene(1);
@@ -78,7 +83,7 @@ class ExperienceTools {
       this.frozenImage.src = this.downloadUrl;
       document.body.appendChild(this.frozenImage);
       document.body.classList.add('is-frozen');
-      this.freezeButton.innerHTML = '<span aria-hidden="true">↻</span> REANUDAR';
+      this.freezeButton.innerHTML = '<span aria-hidden="true">↻</span> REANUDAR <kbd aria-hidden="true">F</kbd>';
       this.freezeButton.setAttribute('aria-pressed', 'true');
       this.saveButton.hidden = false;
       document.querySelector('.header-live').innerHTML = '<span></span> EN PAUSA';
@@ -109,7 +114,7 @@ class ExperienceTools {
     this.frozenImage?.remove();
     this.frozenImage = null;
     document.body.classList.remove('is-frozen');
-    this.freezeButton.innerHTML = '<span aria-hidden="true">◉</span> CONGELAR INSTANTE';
+    this.freezeButton.innerHTML = '<span aria-hidden="true">◉</span> CONGELAR INSTANTE <kbd aria-hidden="true">F</kbd>';
     this.freezeButton.setAttribute('aria-pressed', 'false');
     this.saveButton.hidden = true;
     document.querySelector('.header-live').innerHTML = '<span></span> EN VIVO';

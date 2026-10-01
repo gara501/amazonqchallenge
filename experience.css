@@ -30,11 +30,13 @@ button:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
 .experience-actions { position:fixed; z-index:95; left:clamp(25px,4vw,65px); bottom:181px; display:flex; flex-wrap:wrap; align-items:center; gap:9px; max-width:min(58vw,670px); }
 .experience-action { display:inline-flex; align-items:center; gap:10px; min-height:41px; padding:0 14px; border:1px solid rgba(255,255,255,.4); background:rgba(7,8,10,.72); color:var(--paper); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.075em; cursor:pointer; backdrop-filter:blur(16px); transition:background .2s,border-color .2s,color .2s; }
 .experience-action span { color:var(--accent); font-size:18px; line-height:1; }
+.experience-action kbd { display:inline-grid; place-items:center; min-width:19px; height:19px; margin-left:6px; border:1px solid rgba(255,255,255,.35); border-radius:2px; color:var(--paper); font:9px 'DM Mono',monospace; letter-spacing:0; }
 .experience-action:hover,.experience-action:focus-visible { border-color:var(--accent); background:rgba(255,131,124,.16); }
 .experience-action-secondary { border-color:transparent; background:rgba(7,8,10,.38); color:#c4bab3; }
 .experience-action[hidden],.symbolic-panel[hidden] { display:none !important; }
 body.is-frozen #freeze-button { border-color:var(--accent); background:var(--accent); color:var(--ink); }
 body.is-frozen #freeze-button span { color:var(--ink); }
+body.is-frozen #freeze-button kbd { border-color:rgba(8,9,11,.35); color:var(--ink); }
 body.is-frozen .header-live span { animation:none; opacity:.55; }
 .symbolic-panel { position:fixed; z-index:96; left:clamp(25px,4vw,65px); bottom:238px; width:min(400px,calc(100vw - 50px)); perspective:1100px; }
 .reading-card { height:min(330px,calc(100dvh - 310px)); min-height:250px; }
